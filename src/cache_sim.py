@@ -42,7 +42,25 @@ def parse_input(file_path):
 
 # FIFO
 def run_fifo(k, requests):
-    pass
+    cache = set()
+    queue = collections.deque()
+    misses = 0
+
+    for r in requests:
+        if r in cache:  # HIT
+            pass
+        else:           # MISS
+            misses += 1
+            if len(cache) < k:
+                cache.add(r)
+                queue.append(r)
+            else:
+                evicted = queue.popleft()   # Evict oldest
+                cache.remove(evicted)
+                cache.add(r)
+                queue.append(r)
+
+    return misses
 
 
 # LRU
