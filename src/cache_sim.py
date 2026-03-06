@@ -65,12 +65,53 @@ def run_fifo(k, requests):
 
 # LRU
 def run_lru(k, requests):
-    pass
+    cache = collections.OrderedDict()
+    misses = 0
+    for r in requests:
+        if r in cache:          # HIT
+            cache.move_to_end(r)
+        else:                   # MISS
+            misses += 1
+            if len(cache) >= k: # LRU
+                cache.popitem(last=False)
+            cache[r] = True
+
+    return misses
 
 
 # OPTFF
 def run_optff(k, requests):
-    pass
+    cache = set()
+    misses = 0
+    for i, r in enumerate(requests):
+        if r in cache:  # HIT
+            pass
+        else:           # MISS
+            misses += 1
+            if len(cache) < k:
+                cache.add(r)
+            else:
+                # Evict the item that appears farthest in the future
+                farthest_idx = -1
+                victim = None
+                for cached_item in cache:
+                    try:
+                        next_idx = requests.index(cached_item, i + 1)
+                    except ValueError:
+                        next_idx = float('inf')
+
+                    if next_idx > farthest_idx:
+                        farthest_idx = next_idx
+                        victim = cached_item
+
+                    # Optimization: if we find an item that is never used again we can evict it immediately without checking others.
+                    if farthest_idx == float('inf'):
+                        break
+
+                cache.remove(victim)
+                cache.add(r)
+
+    return misses
 
 
 
