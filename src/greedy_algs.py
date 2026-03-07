@@ -114,11 +114,10 @@ def run_optff(k, requests):
     return misses
 
 
-
 def main():
     # Check input
     if len(sys.argv) != 2:
-        print("Usage: python src/cache_sim.py <input_file>")
+        print("Usage: python src/greedy_algs.py <input_file>")
         sys.exit(1)
 
     # Get input, parse it
@@ -129,10 +128,10 @@ def main():
     fifo_misses = run_fifo(k, requests)
     lru_misses = run_lru(k, requests)
     optff_misses = run_optff(k, requests)
-    
+
     # Output results
-    print(f"FIFO : {fifo_misses}")
-    print(f"LRU : {lru_misses}")
+    print(f"FIFO  : {fifo_misses}")
+    print(f"LRU   : {lru_misses}")
     print(f"OPTFF : {optff_misses}")
 
 if __name__ == "__main__":
