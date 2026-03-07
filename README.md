@@ -9,8 +9,12 @@ To run the code, you must have python installed and use the following command:
 ```bash
 python src/greedy_algs.py <input_file>
 ```
+Examples:
 ```bash
 python src/greedy_algs.py data/example.in
+```
+```bash
+python src/greedy_algs.py data/example.in > data/example.out
 ```
 
 ## Question 1: Empirical Comparison
@@ -19,8 +23,6 @@ python src/greedy_algs.py data/example.in
 | `test1.in` | 3 | 60 | 38 | 20 | 20 |
 | `test2.in` | 3 | 56 | 28 | 30 | 16 |
 | `test3.in` | 4 | 60 | 55 | 55 | 39 |
-
-**Comments:**
 - **Does OPTFF have the fewest misses?**
 
   Yes, in every test case, OPTFF consistently has the fewest misses.
@@ -48,3 +50,14 @@ For (k=3), a sequence where OPTFF incurs strictly fewer misses:
 
 ## Question 3: Prove OPTFF is Optimal
 **Proof:**
+
+OPTFF evicts the item whose next request occurs farthest in the future. Assume there exists another offline algorithm ( A ) that produces fewer cache misses than OPTFF for some fixed request sequence.
+
+Consider the first time in the sequence where ( A ) and OPTFF make different eviction decisions, and suppose the cache is full and a miss occurs. Let OPTFF evict item x (this must be the one used farthest in the future), while ( A ) evicts some other item y (x != y). Since OPTFF chose x, the next request for x must occur later than the next request for every other item in the cache, including y. The following must happen:
+- The request for y will occur before the next request for x.
+- When that request occurs, ( A ) will experience a cache miss because it removed y.
+- OPTFF will still have y in the cache and therefore gets a hit.
+
+Continuing, at this point OPTFF has no more misses than ( A ). We can modify ( A ) so that it evicts x instead of y at this step without increasing the number of misses. By repeatedly applying this argument to every step where the algorithms differ, ( A ) becomes OPTFF without increasing the number of misses.
+
+Therefore, OPTFF cannot have more misses than any other offline algorithm on the same request sequence. Hence, OPTFF is optimal.
